@@ -1,68 +1,114 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
-
 import './App.css';
-import Textinput from "./components/Textinput";
-import Radioinput from "./components/Radioinput";
+import InputElement from './components/inputElement/InputElement';
+import Button from './components/button/Button';
+import MultiSelectElement from './components/multiSelectElement/MultiSelectElement';
+import SingleSelectElement from './components/singleSelectElement/SingleSelectElement';
 
 function App() {
-    // const {register, handleSubmit, formState: {errors}} = useForm( {mode: "onChange"});
-    const { handleSubmit, formState: { errors }, register, watch } = useForm();
+    const { register, formState: { errors }, handleSubmit, watch } = useForm({
+        mode: 'onChange',
+    });
 
-    const selectedReferrer = watch('bezorgFrequentie');
+    const selectedFrequency = watch('delivery-frequency');
 
-    function onFormSubmit(data){
+    function onFormSubmit(data) {
         console.log(data);
     }
 
-  return (
-    <div className="container">
-        <form onSubmit={handleSubmit(onFormSubmit)}
-              id="mainform">
-            <Textinput name="Voornaam" register={register("Voornaam", {required: true})}/>
-            <Textinput name="Achternaam" register={register("Achternaam", {required: true})}/>
-            <Textinput name="Leeftijd" register={register("Leeftijd", {required: true})}/>
-            <Textinput name="Postcode" register={register("Postcode", {required: true})}/>
-
-            <label htmlFor="frequentie">
-                Bezorgfrequentie <br/>
-                <select id="frequentie" {...register("bezorgFrequentie", {required: true})}>
-                    <option value="iedere week">iedere week</option>
-                    <option value="om de week">om de week</option>
-                    <option value="iedere maand">iedere maand</option>
-                    <option value="other">Anders</option>
-                </select>
-            </label>
-
-            {/*conditineel veld, voeg 'watch' toe aan const*/}
-            {selectedReferrer === "other" &&  <input
-                type="text"
-                {...register("specificeer")}
-            />}
-
-
-            <label htmlFor="opmerkingen">
-                Opmerkingen <br/>
-                <textarea
-                    id="opmerkingen"
-                    rows="4"
-                    cols="30"
-                    {...register("opmerkingen")}
-                />
-            </label>
-            <label>
-                <br />
-                <input type="checkbox"
-                       {...register("checkbox", {required: true})}/>
-                Ik ga akkoord met de voorwaarden
-            </label>
-            <input type="submit"
-                //className={(errors.Achternaam && errors.Voornaam && errors.Leeftijd && errors.Postcode && errors.bezorgFrequentie && errors.radio && errors.checkbox) ? "none" : "redButton"}
+    return (
+        <form onSubmit={handleSubmit(onFormSubmit)}>
+            <InputElement
+                errors={errors}
+                register={register}
+                name="firstname"
+                label="Voornaam"
+                inputType="text"
+                validationRules={{
+                    required: "Voornaam is verplicht",
+                }}
             />
-            {errors.Voornaam && <p>geen voornaam</p>}
+
+            <InputElement
+                errors={errors}
+                register={register}
+                name="lastname"
+                label="Achternaam"
+                inputType="text"
+                validationRules={{
+                    required: "Achternaam is verplicht",
+                }}
+            />
+
+            <InputElement
+                errors={errors}
+                register={register}
+                name="age"
+                label="Leeftijd"
+                inputType="number"
+                validationRules={{
+                    required: "Leeftijd is verplicht",
+                    min: {
+                        value: 18,
+                        message: "Minimale leeftijd is 18",
+                    }
+                }}
+            />
+
+            <InputElement
+                errors={errors}
+                register={register}
+                name="zipcode"
+                label="Postcode"
+                inputType="text"
+                validationRules={{
+                    required: "Postcode is verplicht",
+                    pattern: {
+                        value: /^[0-9]{4}[a-zA-Z]{2}$/,
+                        message: "Ongeldige postcode",
+                    }
+                }}
+            />
+
+            <SingleSelectElement errors={errors} register={register} name="delivery-frequency" label="Bezorgfrequentie">
+                <option value="week">Iedere week</option>
+                <option value="two-week">Om de week</option>
+                <option value="month">Iedere maand</option>
+                <option value="other">Anders</option>
+            </SingleSelectElement>
+
+            {selectedFrequency === "other" &&
+            <InputElement
+                errors={errors}
+                register={register}
+                name="other"
+                label="Specificeer"
+                inputType="text"
+            />
+            }
+
+            <InputElement
+                errors={errors}
+                register={register}
+                name="comments"
+                label="Opmerkingen"
+                inputType="textarea"
+            />
+
+            <MultiSelectElement
+                errors={errors}
+                register={register}
+                name="terms-and-conditions"
+                label="Ik ga akkoord met de algemene voorwaarden"
+                selectType="checkbox"
+            />
+
+            <Button type="submit">
+                Verzenden
+            </Button>
         </form>
-    </div>
-  );
+    );
 }
 
 export default App;

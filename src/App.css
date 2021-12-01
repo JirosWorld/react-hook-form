@@ -1,8 +1,14 @@
-body {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+input[type="text"] {
+    display: block;
 }
-.container {
 
+label {
+    display: block;
+    margin: 8px 0;
+}
+
+p {
+    color: red;
+    font-size: 10px;
+    margin: 0;
 }
