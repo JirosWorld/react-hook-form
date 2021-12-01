@@ -1,6 +1,6 @@
 # Opdrachtbeschrijving
 
-## Inleiding
+## origineel: https://github.com/hogeschoolnovi/frontend-react-hook-form 
 Je gaat een formulier met validatieregels bouwen in React Hook Form, dat er uiteindelijk zo uit zal zien:
 
 ![screenshot](./src/assets/screenshot.png)
